@@ -9,7 +9,7 @@ export default defineConfig(({ command }) => ({
     react(),
     tailwindcss(),
     VitePWA({
-      registerType: 'prompt',
+      registerType: 'autoUpdate',
       manifest: {
         name: 'PoGo Search Filters',
         short_name: 'PoGo Filters',
@@ -26,6 +26,8 @@ export default defineConfig(({ command }) => ({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,json}'],
+        skipWaiting: true,
+        clientsClaim: true,
       },
     }),
   ],
