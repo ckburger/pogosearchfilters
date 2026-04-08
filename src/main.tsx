@@ -4,10 +4,10 @@ import { registerSW } from 'virtual:pwa-register';
 import './index.css';
 import { App } from './App';
 
-registerSW({
+const updateSW = registerSW({
   onNeedRefresh() {
     if (confirm('Neue Version verfügbar. Jetzt aktualisieren?')) {
-      location.reload();
+      updateSW(true);
     }
   },
 });
