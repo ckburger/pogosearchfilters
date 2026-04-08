@@ -53,6 +53,11 @@ export function generateSearchString(
   return [regularStr, ...shadowParts].filter(Boolean).join(',');
 }
 
+export function negateSearchString(s: string): string {
+  if (!s) return '';
+  return s.split(',').map(seg => `!${seg}`).join('&');
+}
+
 export function countUniqueIds(ids: number[], pokemonData: PokemonSpecies[]): number {
   const all = new Set<number>();
   for (const id of ids) {

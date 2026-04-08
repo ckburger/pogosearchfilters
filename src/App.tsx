@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import pokemonDataRaw from './data/pokemon.json';
 import type { PvpLeague, PokemonSpecies } from './types';
 import { useAppStore } from './hooks/useAppStore';
-import { generateSearchString, countUniqueIds } from './utils/searchString';
+import { generateSearchString, countUniqueIds, negateSearchString } from './utils/searchString';
 import { SearchStringCard } from './components/SearchStringCard';
 import { AutoLeagueSection } from './components/AutoLeagueSection';
 import { PveSection } from './components/PveSection';
@@ -48,6 +48,7 @@ export function App() {
     () => generateSearchString(combinedIds, pokemonData),
     [combinedIds],
   );
+  const negatedString = useMemo(() => negateSearchString(combinedString), [combinedString]);
   const combinedIdCount = useMemo(
     () => countUniqueIds(combinedIds, pokemonData),
     [combinedIds],
@@ -83,6 +84,13 @@ export function App() {
           title="All Pokémon (Combined)"
           searchString={combinedString}
           color="#94a3b8"
+          pokemonCount={combinedIds.length}
+          idCount={combinedIdCount}
+        />
+        <SearchStringCard
+          title="Not in List"
+          searchString={negatedString}
+          color="#64748b"
           pokemonCount={combinedIds.length}
           idCount={combinedIdCount}
         />
