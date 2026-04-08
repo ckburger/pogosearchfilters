@@ -17,7 +17,9 @@
       "WebFetch(domain:www.lastlevels.com)",
       "WebFetch(domain:www.techadvisor.com)",
       "WebFetch(domain:www.pokegozone.com)",
-      "WebFetch(domain:sites.google.com)"
+      "WebFetch(domain:sites.google.com)",
+      "WebFetch(domain:db.pokemongohub.net)",
+      "WebFetch(domain:fight.pokeminers.com)"
     ]
   }
 }

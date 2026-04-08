@@ -3,6 +3,7 @@ import pokemonDataRaw from './data/pokemon.json';
 import type { PvpLeague, PokemonSpecies } from './types';
 import { useAppStore } from './hooks/useAppStore';
 import { generateSearchString, countUniqueIds, negateSearchString } from './utils/searchString';
+import { pveRankings } from './utils/pveRankings';
 import { SearchStringCard } from './components/SearchStringCard';
 import { AutoLeagueSection } from './components/AutoLeagueSection';
 import { PveSection } from './components/PveSection';
@@ -38,8 +39,8 @@ export function App() {
     const all = new Set<number>();
     if (fetched) {
       [...fetched.gl, ...fetched.ul, ...fetched.ml].forEach(e => all.add(e.dex));
-      Object.values(fetched.pve).flat().forEach(id => all.add(id));
     }
+    Object.values(pveRankings).flat().forEach(e => all.add(e.dex));
     custom.forEach(cat => cat.pokemon.forEach(id => all.add(id)));
     return Array.from(all);
   }, [fetched, custom]);
@@ -147,11 +148,7 @@ export function App() {
         )}
         {activeTab === 'pve' && (
           <PveSection
-            fetched={fetched}
-            isFetching={isFetching}
-            fetchError={fetchError}
             pokemonData={pokemonData}
-            onRefresh={refresh}
           />
         )}
         {activeTab === 'custom' && (

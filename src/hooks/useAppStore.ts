@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import type { CustomCategory, FetchedData } from '../types';
 import { fetchAllData } from '../services/pvpokeService';
 
-const KEY_FETCHED = 'pogo-fetched-v2';
+const KEY_FETCHED = 'pogo-fetched-v4';
 const KEY_CUSTOM = 'pogo-custom-v1';
 
 function loadFetched(): FetchedData | null {

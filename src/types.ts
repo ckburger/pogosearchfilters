@@ -34,11 +34,19 @@ export interface PvpEntry {
   shadow: boolean;
 }
 
+export interface PveEntry {
+  dex: number;
+  shadow: boolean;
+  fastMove: string;
+  chargedMove: string;
+  fastLegacy: boolean;
+  chargedLegacy: boolean;
+}
+
 export interface FetchedData {
   gl: PvpEntry[];
   ul: PvpEntry[];
   ml: PvpEntry[];
-  pve: Record<string, number[]>;
   lastUpdated: string;
 }
 
