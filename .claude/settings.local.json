@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm info:*)",
+      "Bash(node -e \"const v=JSON.parse\\(require\\(''''fs''''\\).readFileSync\\(''''/dev/stdin'''',''''utf8''''\\)\\); console.log\\(v.filter\\(x=>x.startsWith\\(''''0.''''\\)\\).slice\\(-10\\).join\\(''''\\\\n''''\\)\\)\")",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebSearch",
+      "WebFetch(domain:pokemongo.fandom.com)",
+      "WebFetch(domain:niantic.helpshift.com)",
+      "WebFetch(domain:gist.github.com)",
+      "WebFetch(domain:pokemongohub.net)",
+      "WebFetch(domain:leidwesen.github.io)",
+      "WebFetch(domain:www.dexerto.com)",
+      "WebFetch(domain:anyto.imyfone.com)",
+      "WebFetch(domain:ipokegox.com)",
+      "WebFetch(domain:www.lastlevels.com)",
+      "WebFetch(domain:www.techadvisor.com)",
+      "WebFetch(domain:www.pokegozone.com)",
+      "WebFetch(domain:sites.google.com)"
+    ]
+  }
+}
