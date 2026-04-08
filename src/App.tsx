@@ -65,9 +65,9 @@ export function App() {
       <header className="flex items-center justify-between px-4 py-3 border-b border-slate-700 sticky top-0 bg-slate-900 z-10">
         <div>
           <h1 className="text-lg font-bold tracking-tight">PoGo Filters</h1>
-          {lastUpdated && (
-            <p className="text-xs text-slate-500">Updated {lastUpdated}</p>
-          )}
+          <p className="text-xs text-slate-500">
+            v{__BUILD_DATE__}{lastUpdated && ` · ${lastUpdated}`}
+          </p>
         </div>
         <button
           onClick={refresh}
