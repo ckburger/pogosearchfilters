@@ -37,6 +37,7 @@ export interface PvpEntry {
 export interface PveEntry {
   dex: number;
   shadow: boolean;
+  name: string;
   fastMove: string;
   chargedMove: string;
   fastLegacy: boolean;

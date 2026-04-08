@@ -34,12 +34,11 @@ function TypeSection({
         idCount={idCount}
       />
       <div className="flex flex-col gap-1">
-        {entries.map(({ dex, shadow, fastMove, chargedMove, fastLegacy, chargedLegacy }) => {
-          const species = pokemonData.find(p => p.id === dex);
+        {entries.map(({ dex, shadow, name, fastMove, chargedMove, fastLegacy, chargedLegacy }) => {
           return (
             <div key={`${dex}-${shadow}`} className="flex items-center gap-3 px-3 py-1.5 rounded-lg bg-slate-800/50">
               <span className="text-slate-500 font-mono text-xs w-9 shrink-0">#{dex}</span>
-              <span className="text-sm text-slate-300 shrink-0">{species?.nameEn ?? `#${dex}`}</span>
+              <span className="text-sm text-slate-300 shrink-0">{name}</span>
               {shadow && <span className="text-xs text-purple-400 shrink-0">crypto</span>}
               <span className="text-xs text-slate-500 truncate">
                 {fastMove}{fastLegacy ? '*' : ''} / {chargedMove}{chargedLegacy ? '*' : ''}
