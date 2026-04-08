@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import type { PokemonSpecies, PogoType, PveEntry } from '../types';
 import { POGO_TYPES, TYPE_COLORS } from '../types';
 import { generateSearchString, countUniqueIds } from '../utils/searchString';
@@ -24,6 +24,8 @@ function TypeSection({
   const idCount = useMemo(() => countUniqueIds(ids, pokemonData), [ids, pokemonData]);
   const label = type.charAt(0).toUpperCase() + type.slice(1);
 
+  const [open, setOpen] = useState(false);
+
   return (
     <div className="flex flex-col gap-1">
       <SearchStringCard
@@ -33,9 +35,15 @@ function TypeSection({
         pokemonCount={entries.length}
         idCount={idCount}
       />
-      <div className="flex flex-col gap-1">
-        {entries.map(({ dex, shadow, name, fastMove, chargedMove, fastLegacy, chargedLegacy }) => {
-          return (
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="text-xs text-slate-500 hover:text-slate-300 text-left px-3 py-1 transition-colors"
+      >
+        {open ? '▲ Liste ausblenden' : '▼ Liste anzeigen'}
+      </button>
+      {open && (
+        <div className="flex flex-col gap-1">
+          {entries.map(({ dex, shadow, name, fastMove, chargedMove, fastLegacy, chargedLegacy }) => (
             <div key={`${dex}-${shadow}`} className="flex items-center gap-3 px-3 py-1.5 rounded-lg bg-slate-800/50">
               <span className="text-slate-500 font-mono text-xs w-9 shrink-0">#{dex}</span>
               <span className="text-sm text-slate-300 shrink-0">{name}</span>
@@ -44,9 +52,9 @@ function TypeSection({
                 {fastMove}{fastLegacy ? '*' : ''} / {chargedMove}{chargedLegacy ? '*' : ''}
               </span>
             </div>
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
