@@ -35,19 +35,31 @@ export function App() {
     if (!fetched && !isFetching) refresh();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const combinedIds = useMemo(() => {
-    const all = new Set<number>();
+  const { combinedRegularIds, combinedShadowSet } = useMemo(() => {
+    const regular = new Set<number>();
+    const shadow = new Set<number>();
     if (fetched) {
-      [...fetched.gl, ...fetched.ul, ...fetched.ml].forEach(e => all.add(e.dex));
+      [...fetched.gl, ...fetched.ul, ...fetched.ml].forEach(e =>
+        e.shadow ? shadow.add(e.dex) : regular.add(e.dex)
+      );
     }
-    Object.values(pveRankings).flat().forEach(e => all.add(e.dex));
-    custom.forEach(cat => cat.pokemon.forEach(id => all.add(id)));
-    return Array.from(all);
+    Object.values(pveRankings).flat().forEach(e =>
+      e.shadow ? shadow.add(e.dex) : regular.add(e.dex)
+    );
+    custom.forEach(cat => cat.pokemon.forEach(id => regular.add(id)));
+    // if a dex appears as both regular and shadow, regular covers all forms
+    shadow.forEach(dex => { if (regular.has(dex)) shadow.delete(dex); });
+    return { combinedRegularIds: Array.from(regular), combinedShadowSet: shadow };
   }, [fetched, custom]);
 
+  const combinedIds = useMemo(
+    () => [...combinedRegularIds, ...Array.from(combinedShadowSet)],
+    [combinedRegularIds, combinedShadowSet],
+  );
+
   const combinedString = useMemo(
-    () => generateSearchString(combinedIds, pokemonData),
-    [combinedIds],
+    () => generateSearchString(combinedRegularIds, pokemonData, combinedShadowSet),
+    [combinedRegularIds, combinedShadowSet],
   );
   const negatedString = useMemo(() => negateSearchString(combinedString), [combinedString]);
   const combinedIdCount = useMemo(

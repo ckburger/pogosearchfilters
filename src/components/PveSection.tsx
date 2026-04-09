@@ -19,9 +19,11 @@ function TypeSection({
   pokemonData: PokemonSpecies[];
 }) {
   const color = TYPE_COLORS[type];
-  const ids = useMemo(() => entries.map(e => e.dex), [entries]);
-  const searchString = useMemo(() => generateSearchString(ids, pokemonData), [ids, pokemonData]);
-  const idCount = useMemo(() => countUniqueIds(ids, pokemonData), [ids, pokemonData]);
+  const regularDexIds = useMemo(() => entries.filter(e => !e.shadow).map(e => e.dex), [entries]);
+  const shadowDexSet = useMemo(() => new Set(entries.filter(e => e.shadow).map(e => e.dex)), [entries]);
+  const allDexIds = useMemo(() => entries.map(e => e.dex), [entries]);
+  const searchString = useMemo(() => generateSearchString(regularDexIds, pokemonData, shadowDexSet), [regularDexIds, shadowDexSet, pokemonData]);
+  const idCount = useMemo(() => countUniqueIds(allDexIds, pokemonData), [allDexIds, pokemonData]);
   const label = type.charAt(0).toUpperCase() + type.slice(1);
 
   const [open, setOpen] = useState(false);
@@ -72,10 +74,12 @@ export function PveSection({ pokemonData }: Props) {
     }).sort((a, b) => a.dex - b.dex);
   }, []);
 
+  const allPveRegularIds = useMemo(() => allPveEntries.filter(e => !e.shadow).map(e => e.dex), [allPveEntries]);
+  const allPveShadowSet = useMemo(() => new Set(allPveEntries.filter(e => e.shadow).map(e => e.dex)), [allPveEntries]);
   const allPveIds = useMemo(() => allPveEntries.map(e => e.dex), [allPveEntries]);
   const combinedString = useMemo(
-    () => generateSearchString(allPveIds, pokemonData),
-    [allPveIds, pokemonData],
+    () => generateSearchString(allPveRegularIds, pokemonData, allPveShadowSet),
+    [allPveRegularIds, allPveShadowSet, pokemonData],
   );
   const combinedIdCount = useMemo(
     () => countUniqueIds(allPveIds, pokemonData),
