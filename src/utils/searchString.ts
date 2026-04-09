@@ -43,7 +43,7 @@ export function generateCryptoString(
 ): string {
   if (shadowIds.size === 0) return '';
   const expanded = expandEvolutions(shadowIds, pokemonData);
-  return Array.from(expanded).sort((a, b) => a - b).map(id => `crypto&${id}`).join(',');
+  return `crypto&${toRangeString(expanded)}`;
 }
 
 export function negateSearchString(s: string): string {
