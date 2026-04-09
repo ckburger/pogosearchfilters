@@ -16,10 +16,15 @@ export const pveRankings: Record<PogoType, PveEntry[]> = Object.fromEntries(
       const fast = parseName(e.fastAttack);
       const charged = parseName(e.chargedAttack);
       const shadow = e.name.includes('Crypto-');
+      const mega = e.name.startsWith('Mega ');
+      const name = shadow
+        ? e.name.replace('Crypto-', '')
+        : mega ? e.name.slice('Mega '.length) : e.name;
       return {
         dex: e.dex,
         shadow,
-        name: shadow ? e.name.replace('Crypto-', '') : e.name,
+        mega,
+        name,
         fastMove: fast.name,
         chargedMove: charged.name,
         fastLegacy: fast.legacy,
