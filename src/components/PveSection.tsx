@@ -60,10 +60,19 @@ function TypeSection({
 }
 
 export function PveSection({ pokemonData }: Props) {
-  const allPveIds = useMemo(
-    () => Array.from(new Set(Object.values(pveRankings).flat().map(e => e.dex))),
-    [],
-  );
+  const [combinedOpen, setCombinedOpen] = useState(false);
+
+  const allPveEntries = useMemo(() => {
+    const seen = new Set<string>();
+    return Object.values(pveRankings).flat().filter(e => {
+      const key = `${e.dex}-${e.shadow}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    }).sort((a, b) => a.dex - b.dex);
+  }, []);
+
+  const allPveIds = useMemo(() => allPveEntries.map(e => e.dex), [allPveEntries]);
   const combinedString = useMemo(
     () => generateSearchString(allPveIds, pokemonData),
     [allPveIds, pokemonData],
@@ -75,13 +84,32 @@ export function PveSection({ pokemonData }: Props) {
 
   return (
     <div className="p-4 flex flex-col gap-3">
-      <SearchStringCard
-        title="All Raid Attackers (Combined)"
-        searchString={combinedString}
-        color="#f97316"
-        pokemonCount={allPveIds.length}
-        idCount={combinedIdCount}
-      />
+      <div className="flex flex-col gap-1">
+        <SearchStringCard
+          title="All Raid Attackers (Combined)"
+          searchString={combinedString}
+          color="#f97316"
+          pokemonCount={allPveEntries.length}
+          idCount={combinedIdCount}
+        />
+        <button
+          onClick={() => setCombinedOpen(o => !o)}
+          className="text-xs text-slate-500 hover:text-slate-300 text-left px-3 py-1 transition-colors"
+        >
+          {combinedOpen ? '▲ Liste ausblenden' : '▼ Liste anzeigen'}
+        </button>
+        {combinedOpen && (
+          <div className="flex flex-col gap-1">
+            {allPveEntries.map(({ dex, shadow, name }) => (
+              <div key={`${dex}-${shadow}`} className="flex items-center gap-3 px-3 py-1.5 rounded-lg bg-slate-800/50">
+                <span className="text-slate-500 font-mono text-xs w-9 shrink-0">#{dex}</span>
+                <span className="text-sm text-slate-300">{name}</span>
+                {shadow && <span className="text-xs text-purple-400">crypto</span>}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
       {POGO_TYPES.map(type => (
         <TypeSection
           key={type}
