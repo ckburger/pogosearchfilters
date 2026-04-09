@@ -33,24 +33,17 @@ function toRangeString(ids: Set<number>): string {
 export function generateSearchString(
   ids: number[],
   pokemonData: PokemonSpecies[],
-  shadowIds?: ReadonlySet<number>,
 ): string {
-  const regularIds = expandEvolutions(ids, pokemonData);
+  return toRangeString(expandEvolutions(ids, pokemonData));
+}
 
-  const shadowParts: string[] = [];
-  if (shadowIds && shadowIds.size > 0) {
-    const regularSet = new Set(ids);
-    // Only generate shadow&X for shadow entries not already covered by a non-shadow entry
-    const shadowOnlyDex = Array.from(shadowIds).filter(id => !regularSet.has(id));
-    const allShadowIds = expandEvolutions(shadowOnlyDex, pokemonData);
-    for (const id of Array.from(allShadowIds).sort((a, b) => a - b)) {
-      shadowParts.push(`crypto&${id}`);
-    }
-  }
-
-  const regularStr = toRangeString(regularIds);
-  if (!regularStr && shadowParts.length === 0) return '';
-  return [regularStr, ...shadowParts].filter(Boolean).join(',');
+export function generateCryptoString(
+  shadowIds: ReadonlySet<number>,
+  pokemonData: PokemonSpecies[],
+): string {
+  if (shadowIds.size === 0) return '';
+  const expanded = expandEvolutions(shadowIds, pokemonData);
+  return Array.from(expanded).sort((a, b) => a - b).map(id => `crypto&${id}`).join(',');
 }
 
 export function negateSearchString(s: string): string {

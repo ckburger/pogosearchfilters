@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import pokemonDataRaw from './data/pokemon.json';
 import type { PvpLeague, PokemonSpecies } from './types';
 import { useAppStore } from './hooks/useAppStore';
-import { generateSearchString, countUniqueIds, negateSearchString } from './utils/searchString';
+import { generateSearchString, generateCryptoString, countUniqueIds, negateSearchString } from './utils/searchString';
 import { pveRankings } from './utils/pveRankings';
 import { SearchStringCard } from './components/SearchStringCard';
 import { AutoLeagueSection } from './components/AutoLeagueSection';
@@ -58,8 +58,12 @@ export function App() {
   );
 
   const combinedString = useMemo(
-    () => generateSearchString(combinedRegularIds, pokemonData, combinedShadowSet),
-    [combinedRegularIds, combinedShadowSet],
+    () => generateSearchString(combinedRegularIds, pokemonData),
+    [combinedRegularIds],
+  );
+  const combinedCryptoString = useMemo(
+    () => generateCryptoString(combinedShadowSet, pokemonData),
+    [combinedShadowSet],
   );
   const negatedString = useMemo(() => negateSearchString(combinedString), [combinedString]);
   const combinedIdCount = useMemo(
@@ -100,6 +104,15 @@ export function App() {
           pokemonCount={combinedIds.length}
           idCount={combinedIdCount}
         />
+        {combinedCryptoString && (
+          <SearchStringCard
+            title="All Pokémon (Crypto)"
+            searchString={combinedCryptoString}
+            color="#a855f7"
+            pokemonCount={combinedShadowSet.size}
+            idCount={combinedShadowSet.size}
+          />
+        )}
         <SearchStringCard
           title="Not in List"
           searchString={negatedString}

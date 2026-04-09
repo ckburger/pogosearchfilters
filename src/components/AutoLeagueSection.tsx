@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import type { PvpLeague, PokemonSpecies, FetchedData, PvpEntry } from '../types';
 import { LEAGUE_LABELS, LEAGUE_COLORS } from '../types';
-import { generateSearchString, countUniqueIds } from '../utils/searchString';
+import { generateSearchString, generateCryptoString, countUniqueIds } from '../utils/searchString';
 import { SearchStringCard } from './SearchStringCard';
 
 interface Props {
@@ -24,8 +24,12 @@ export function AutoLeagueSection({
   const label = LEAGUE_LABELS[league];
 
   const searchString = useMemo(
-    () => generateSearchString(regularDexIds, pokemonData, shadowDexSet),
-    [regularDexIds, shadowDexSet, pokemonData],
+    () => generateSearchString(regularDexIds, pokemonData),
+    [regularDexIds, pokemonData],
+  );
+  const cryptoString = useMemo(
+    () => generateCryptoString(shadowDexSet, pokemonData),
+    [shadowDexSet, pokemonData],
   );
   const idCount = useMemo(() => countUniqueIds(allDexIds, pokemonData), [allDexIds, pokemonData]);
 
@@ -72,9 +76,18 @@ export function AutoLeagueSection({
         title={label}
         searchString={searchString}
         color={color}
-        pokemonCount={ids.length}
+        pokemonCount={regularDexIds.length}
         idCount={idCount}
       />
+      {cryptoString && (
+        <SearchStringCard
+          title={`${label} (Crypto)`}
+          searchString={cryptoString}
+          color="#a855f7"
+          pokemonCount={shadowDexSet.size}
+          idCount={shadowDexSet.size}
+        />
+      )}
       <div className="flex flex-col gap-1">
         {ids.map(({ dex, shadow }) => {
           const species = pokemonData.find(p => p.id === dex);

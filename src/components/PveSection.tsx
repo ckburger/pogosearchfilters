@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { PokemonSpecies, PogoType, PveEntry } from '../types';
 import { POGO_TYPES, TYPE_COLORS } from '../types';
-import { generateSearchString, countUniqueIds } from '../utils/searchString';
+import { generateSearchString, generateCryptoString, countUniqueIds } from '../utils/searchString';
 import { pveRankings } from '../utils/pveRankings';
 import { SearchStringCard } from './SearchStringCard';
 
@@ -22,7 +22,8 @@ function TypeSection({
   const regularDexIds = useMemo(() => entries.filter(e => !e.shadow).map(e => e.dex), [entries]);
   const shadowDexSet = useMemo(() => new Set(entries.filter(e => e.shadow).map(e => e.dex)), [entries]);
   const allDexIds = useMemo(() => entries.map(e => e.dex), [entries]);
-  const searchString = useMemo(() => generateSearchString(regularDexIds, pokemonData, shadowDexSet), [regularDexIds, shadowDexSet, pokemonData]);
+  const searchString = useMemo(() => generateSearchString(regularDexIds, pokemonData), [regularDexIds, pokemonData]);
+  const cryptoString = useMemo(() => generateCryptoString(shadowDexSet, pokemonData), [shadowDexSet, pokemonData]);
   const idCount = useMemo(() => countUniqueIds(allDexIds, pokemonData), [allDexIds, pokemonData]);
   const label = type.charAt(0).toUpperCase() + type.slice(1);
 
@@ -34,9 +35,18 @@ function TypeSection({
         title={label}
         searchString={searchString}
         color={color}
-        pokemonCount={entries.length}
+        pokemonCount={regularDexIds.length}
         idCount={idCount}
       />
+      {cryptoString && (
+        <SearchStringCard
+          title={`${label} (Crypto)`}
+          searchString={cryptoString}
+          color="#a855f7"
+          pokemonCount={shadowDexSet.size}
+          idCount={shadowDexSet.size}
+        />
+      )}
       <button
         onClick={() => setOpen(o => !o)}
         className="text-xs text-slate-500 hover:text-slate-300 text-left px-3 py-1 transition-colors"
@@ -78,8 +88,12 @@ export function PveSection({ pokemonData }: Props) {
   const allPveShadowSet = useMemo(() => new Set(allPveEntries.filter(e => e.shadow).map(e => e.dex)), [allPveEntries]);
   const allPveIds = useMemo(() => allPveEntries.map(e => e.dex), [allPveEntries]);
   const combinedString = useMemo(
-    () => generateSearchString(allPveRegularIds, pokemonData, allPveShadowSet),
-    [allPveRegularIds, allPveShadowSet, pokemonData],
+    () => generateSearchString(allPveRegularIds, pokemonData),
+    [allPveRegularIds, pokemonData],
+  );
+  const combinedCryptoString = useMemo(
+    () => generateCryptoString(allPveShadowSet, pokemonData),
+    [allPveShadowSet, pokemonData],
   );
   const combinedIdCount = useMemo(
     () => countUniqueIds(allPveIds, pokemonData),
@@ -93,9 +107,18 @@ export function PveSection({ pokemonData }: Props) {
           title="All Raid Attackers (Combined)"
           searchString={combinedString}
           color="#f97316"
-          pokemonCount={allPveEntries.length}
+          pokemonCount={allPveRegularIds.length}
           idCount={combinedIdCount}
         />
+        {combinedCryptoString && (
+          <SearchStringCard
+            title="All Raid Attackers (Crypto)"
+            searchString={combinedCryptoString}
+            color="#a855f7"
+            pokemonCount={allPveShadowSet.size}
+            idCount={allPveShadowSet.size}
+          />
+        )}
         <button
           onClick={() => setCombinedOpen(o => !o)}
           className="text-xs text-slate-500 hover:text-slate-300 text-left px-3 py-1 transition-colors"
